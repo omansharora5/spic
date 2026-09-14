@@ -3,9 +3,7 @@ import { z } from "zod";
 /**
  * Registration field rules.
  *
- * SPIC issues tickets against institute identities, so email, phone and roll
- * number are validated against the formats RKGIT actually uses
- * (e.g. email 110cs2425@rkgit.edu.in, roll 110CS2425 / 2100270100001).
+ * Any valid email is accepted (temporary/disposable addresses are blocked).
  */
 
 export const COLLEGE_EMAIL_DOMAIN = "rkgit.edu.in";
@@ -16,12 +14,30 @@ export const PHONE_REGEX = /^[6-9]\d{9}$/;
 /** Institute roll numbers: 6–15 alphanumeric characters (e.g. 110CS2425, 2400330120134). */
 export const ROLL_REGEX = /^[A-Za-z0-9]{6,15}$/;
 
+// ponytail: short denylist covers common temp-mail abuse, swap for a full disposable-domain list/API if abuse grows.
+const TEMP_EMAIL_DOMAINS = new Set([
+  "mailinator.com",
+  "tempmail.com",
+  "10minutemail.com",
+  "guerrillamail.com",
+  "yopmail.com",
+  "temp-mail.org",
+  "throwaway.email",
+  "getnada.com",
+  "trashmail.com",
+  "fakeinbox.com",
+]);
+
 export const collegeEmail = z
   .string()
+  .trim()
   .min(1, "Email is required")
   .email("Enter a valid email address")
-  .refine((value) => value.trim().toLowerCase().endsWith(`@${COLLEGE_EMAIL_DOMAIN}`), {
-    message: `Use your college email (@${COLLEGE_EMAIL_DOMAIN})`,
+  .refine((value) => value.includes(".") && (value.split("@")[1]?.includes(".") ?? false), {
+    message: "Enter a valid email address",
+  })
+  .refine((value) => !TEMP_EMAIL_DOMAINS.has(value.split("@")[1]?.toLowerCase() ?? ""), {
+    message: "Temporary email addresses are not allowed",
   });
 
 export const phone = z
