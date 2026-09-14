@@ -9,7 +9,6 @@ import { api, type Registration } from "@/services/api";
 import { createRegistrationDirect, saveFirebaseRegistration } from "@/services/firebaseRegistrations";
 import {
   BRANCH_OPTIONS,
-  COLLEGE_EMAIL_DOMAIN,
   YEAR_OPTIONS,
   collegeEmail,
   normalisePhone,
@@ -139,11 +138,11 @@ export default function EventRegistrationForm({
           <Input {...register("name")} placeholder="Your full name" autoComplete="name" aria-invalid={!!errors.name} />
         </Field>
 
-        <Field label="College email" required hint={`@${COLLEGE_EMAIL_DOMAIN}`} error={errors.email?.message}>
+        <Field label="Email" required error={errors.email?.message}>
           <Input
             {...register("email")}
             type="email"
-            placeholder={`110cs2425@${COLLEGE_EMAIL_DOMAIN}`}
+            placeholder="example@gmail.com"
             autoComplete="email"
             aria-invalid={!!errors.email}
           />
@@ -167,7 +166,7 @@ export default function EventRegistrationForm({
         <Field label="Roll number" required error={errors.rollNumber?.message}>
           <Input
             {...register("rollNumber")}
-            placeholder="e.g. 110CS2425"
+            placeholder="e.g. 2400330100242"
             aria-invalid={!!errors.rollNumber}
             className="uppercase"
           />

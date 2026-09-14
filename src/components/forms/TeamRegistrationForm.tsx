@@ -9,7 +9,6 @@ import { api } from "@/services/api";
 import { createTeamRegistrationDirect, saveFirebaseTeamRegistration } from "@/services/firebaseRegistrations";
 import {
   BRANCH_OPTIONS,
-  COLLEGE_EMAIL_DOMAIN,
   YEAR_OPTIONS,
   normalisePhone,
   teamMemberSchema,
@@ -199,8 +198,7 @@ export default function TeamRegistrationForm({ event }: { event: Event }) {
 
       <div className="rounded-[16px] border border-brand/18 bg-ice/70 px-4 py-3">
         <p className="text-[12.5px] leading-relaxed text-deep">
-          Enter each member using their institute details — college email ending in{" "}
-          <strong>@{COLLEGE_EMAIL_DOMAIN}</strong>, a valid 10-digit mobile number and their roll number. Duplicate
+          Enter each member using their email address, a valid 10-digit mobile number and their roll number. Duplicate
           emails or roll numbers are not allowed.
         </p>
       </div>
@@ -235,22 +233,21 @@ export default function TeamRegistrationForm({ event }: { event: Event }) {
                 <Input {...register(`members.${index}.name` as const)} placeholder="Full name" />
               </Field>
               <Field
-                label="College email"
+                label="Email"
                 required
-                hint={`@${COLLEGE_EMAIL_DOMAIN}`}
                 error={errors.members?.[index]?.email?.message}
               >
                 <Input
                   {...register(`members.${index}.email` as const)}
                   type="email"
-                  placeholder={`110cs2425@${COLLEGE_EMAIL_DOMAIN}`}
+                  placeholder="example@gmail.com"
                   aria-invalid={!!errors.members?.[index]?.email}
                 />
               </Field>
               <Field label="Roll number" required error={errors.members?.[index]?.rollNumber?.message}>
                 <Input
                   {...register(`members.${index}.rollNumber` as const)}
-                  placeholder="e.g. 110CS2425"
+                  placeholder="e.g. 2400330100242"
                   className="uppercase"
                   aria-invalid={!!errors.members?.[index]?.rollNumber}
                 />
