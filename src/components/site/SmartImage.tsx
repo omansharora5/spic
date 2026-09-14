@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Image as ImageIcon } from "lucide-react";
 import { assetUrl, placeholderTone } from "@/lib/media";
@@ -31,7 +31,17 @@ export default function SmartImage({
 }: SmartImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
+  // ponytail: 2 delayed retries cover transient host blips; move images to a reliable CDN if failures persist.
+  const [attempt, setAttempt] = useState(0);
+  const timer = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (timer.current) window.clearTimeout(timer.current);
+    },
+    [],
+  );
   const resolved = assetUrl(src);
+  const retrySrc = attempt && resolved ? `${resolved}${resolved.includes("?") ? "&" : "?"}spic-retry=${attempt}` : resolved;
 
   return (
     <div
@@ -40,13 +50,16 @@ export default function SmartImage({
     >
       {!failed && resolved ? (
         <motion.img
-          src={resolved}
+          src={retrySrc}
           alt={alt}
           loading={priority ? "eager" : "lazy"}
           decoding="async"
           fetchPriority={priority ? "high" : "auto"}
           onLoad={() => setLoaded(true)}
-          onError={() => setFailed(true)}
+          onError={() => {
+            if (attempt < 2) timer.current = window.setTimeout(() => setAttempt((a) => a + 1), 1200 * (attempt + 1));
+            else setFailed(true);
+          }}
           initial={false}
           animate={{ opacity: loaded ? 1 : 0, scale: loaded ? 1 : 1.04 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}

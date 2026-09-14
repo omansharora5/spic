@@ -107,6 +107,7 @@ export default function Team() {
                 objectPosition={faculty[0].objectPosition}
                 rounded="rounded-[20px]"
                 className="aspect-[4/5] w-full"
+                priority
               />
               <div className="flex flex-col justify-center">
                 <Badge tone="ember">Faculty advisor</Badge>
