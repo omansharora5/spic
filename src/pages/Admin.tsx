@@ -22,6 +22,7 @@ import { api } from "@/services/api";
 import { deleteFirebaseEvent, saveFirebaseEvent } from "@/services/firebaseEvents";
 import { subscribeToFirebaseRegistrations } from "@/services/firebaseRegistrations";
 import { addGalleryItem, deleteGalleryItem } from "@/services/firebaseGallery";
+import { deleteTeamMember, subscribeToTeam, syncFileRosterToFirebase } from "@/services/firebaseTeam";
 import PinGate, { clearStoredPin, readStoredPin } from "@/components/admin/PinGate";
 import EventNotes from "@/components/site/EventNotes";
 import { useEvents, useGallery, formatEventDate } from "@/hooks/useSpicData";
@@ -322,6 +323,8 @@ export default function Admin() {
   const [refreshToken, setRefreshToken] = useState(0);
   const [newAlbum, setNewAlbum] = useState({ title: "", category: "", description: "", images: "" });
   const [albumBusy, setAlbumBusy] = useState(false);
+  const [teamLive, setTeamLive] = useState<Array<{ id: string; name: string; role: string; category?: string }>>([]);
+  const [teamSyncBusy, setTeamSyncBusy] = useState(false);
 
   useEffect(() => {
     if (!pin) return;
@@ -336,6 +339,15 @@ export default function Admin() {
         setRegError(err.message);
         setRegLoading(false);
       },
+    );
+  }, [pin, refreshToken]);
+
+  // Live Firebase roster (what the Team page actually shows once loaded).
+  useEffect(() => {
+    if (!pin) return;
+    return subscribeToTeam(
+      (list) => setTeamLive(list.map((m) => ({ id: m.id, name: m.name, role: m.role, category: m.category }))),
+      () => {},
     );
   }, [pin, refreshToken]);
 
@@ -423,6 +435,19 @@ export default function Admin() {
     anchor.download = `spic-registrations-${new Date().toISOString().slice(0, 10)}.csv`;
     anchor.click();
     URL.revokeObjectURL(url);
+  };
+
+  const syncTeam = async () => {
+    setTeamSyncBusy(true);
+    try {
+      const count = await syncFileRosterToFirebase();
+      toast.success("Team roster synced", { description: `${count} members from src/data/team.ts pushed to Firebase` });
+      setRefreshToken((token) => token + 1);
+    } catch (err) {
+      toast.error("Could not sync roster", { description: (err as Error).message });
+    } finally {
+      setTeamSyncBusy(false);
+    }
   };
 
   const createAlbum = async (formEvent: React.FormEvent) => {
@@ -553,6 +578,55 @@ export default function Admin() {
             </table>
           )}
         </div>
+      </section>
+
+      {/* Team roster — edit src/data/team.ts, then Sync to push it live to Firebase. */}
+      <section className="mt-8 overflow-hidden rounded-[26px] border border-line bg-surface shadow-[var(--shadow-sm)]" aria-label="Team roster">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-6 py-5">
+          <div>
+            <h2 className="font-display text-[19px] font-semibold text-ink">Team roster</h2>
+            <p className="mt-0.5 text-[13px] text-muted">
+              {teamLive.length} live in Firebase · source of truth is <code>src/data/team.ts</code>
+            </p>
+          </div>
+          <Button onClick={() => void syncTeam()} disabled={teamSyncBusy}>
+            {teamSyncBusy ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            Sync file → Firebase
+          </Button>
+        </div>
+        <ul className="max-h-80 divide-y divide-line overflow-auto px-6">
+          {teamLive.length === 0 ? (
+            <li className="py-8 text-center text-[13.5px] text-muted">No roster in Firebase yet — hit Sync to publish the file.</li>
+          ) : (
+            teamLive.map((member) => (
+              <li key={member.id} className="flex items-center justify-between gap-3 py-2.5">
+                <div className="min-w-0">
+                  <p className="truncate font-semibold text-ink">{member.name}</p>
+                  <p className="text-[12px] text-muted">
+                    {member.role}{member.category ? ` · ${member.category}` : ""}
+                  </p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-[#B42318] hover:bg-[#FEF2F2]"
+                  onClick={async () => {
+                    if (!window.confirm(`Remove "${member.name}" from the live roster?`)) return;
+                    try {
+                      await deleteTeamMember(member.id);
+                      toast.success("Member removed");
+                      setRefreshToken((token) => token + 1);
+                    } catch (err) {
+                      toast.error("Could not remove member", { description: (err as Error).message });
+                    }
+                  }}
+                >
+                  <Trash className="h-3.5 w-3.5" /> Remove
+                </Button>
+              </li>
+            ))
+          )}
+        </ul>
       </section>
 
       {/* Registrations */}

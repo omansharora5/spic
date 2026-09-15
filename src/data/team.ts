@@ -32,16 +32,11 @@ export const coreLeadership: TeamMember[] = [
   { id: "cl-11", name: "Utkarsh Tyagi", role: "Executive", linkedinUrl: "#", image: "https://i.postimg.cc/Y26vCWvj/IMG-20250226-234449-530-Utkarsh-Tyagi.jpg" },
   { id: "cl-12", name: "Vaibhav Srivastava", role: "Executive", linkedinUrl: "#", image: "https://i.postimg.cc/520ygKnd/DSC-2054-Vaibhav-Srivastava.jpg", objectPosition: "center 20%" },
   { id: "cl-13", name: "Ujjwal Goel", role: "Executive", linkedinUrl: "#", image: "https://i.postimg.cc/FHBRBbBj/Ujjwal-goel.jpg" },
-  { id: "cl-14", name: "Pranjal Dubey", role: "PRO", linkedinUrl: "#", image: "https://i.postimg.cc/c4drgL30/IMG-20250405-155938248-HDR-AE-Pranjal-Dubey.jpg" },
-  { id: "cl-15", name: "Prateek Dixit", role: "PRO", linkedinUrl: "#", image: "https://i.postimg.cc/kX7B6gS4/retouch-2025091801391880-Prateek-Dixit.jpg" },
+  { id: "cl-14", name: "Pranjal Dubey", role: "PRO (Head)", department: "PublicRelations", linkedinUrl: "#", image: "https://i.postimg.cc/c4drgL30/IMG-20250405-155938248-HDR-AE-Pranjal-Dubey.jpg" },
+  { id: "cl-15", name: "Prateek Dixit", role: "PRO (Co-Head)", department: "PublicRelations", linkedinUrl: "#", image: "https://i.postimg.cc/kX7B6gS4/retouch-2025091801391880-Prateek-Dixit.jpg" },
 ];
 
-export const departmentHeads: TeamMember[] = [
-  { id: "dh-6", name: "Ashmit Kumar", role: "Head", department: "Technical", linkedinUrl: "#", image: "https://i.postimg.cc/7YXbgr1t/Ashmit-kumar.jpg" },
-  { id: "dh-7", name: "Nikhil Gaurav", role: "Co-Head", department: "Technical", linkedinUrl: "#", image: "https://i.postimg.cc/28T34Nds/Whats-App-Image-2026-03-15-at-8-24-14-PM.jpg" },
-  { id: "dh-13", name: "Nilisha Garg", role: "Co-Head", department: "Club Out Reach", linkedinUrl: "#", image: "https://i.postimg.cc/SKYsFXBg/IMG-20260209-200539-Nilisha-Garg.jpg" },
-
-];
+export const departmentHeads: TeamMember[] = [];
 
 export const teamMembers: TeamMember[] = [
   { id: "tm-1", name: "Ritesh Yadav ", role: "Member", department: "Event Management", image: "https://i.postimg.cc/rpRmX06q/Screenshot-20260211-122256-Ritesh-Yadav.jpg", objectPosition: "center 20%" },

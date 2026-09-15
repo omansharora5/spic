@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Event } from "@/data/events";
-import { coreLeadership, departmentHeads, facultyAdvisor, type TeamMember } from "@/data/team";
+import { subscribeToTeam, buildFileRoster, type TeamMemberDoc } from "@/services/firebaseTeam";
 import {
   fallbackEvents,
   getFirebaseEvent,
@@ -11,7 +11,6 @@ import { subscribeToGallery, type GalleryAlbum } from "@/services/firebaseGaller
 import { subscribeToTeam, type TeamMemberDoc } from "@/services/firebaseTeam";
 import {
   fetchSheetGallery,
-  fetchSheetTeam,
   isSheetsEnabled,
   type SheetGalleryItem,
 } from "@/services/sheetsApi";
@@ -123,15 +122,11 @@ export function useGallery() {
   return { albums: displayAlbums, state, error, isLoading: state === "loading" };
 }
 
-const bundledTeam: TeamMemberDoc[] = [
-  { ...facultyAdvisor, category: "faculty" },
-  ...coreLeadership.map((m: TeamMember) => ({ ...m, category: "core" })),
-  ...departmentHeads.map((m: TeamMember) => ({ ...m, category: "department" })),
-];
+const bundledTeam: TeamMemberDoc[] = buildFileRoster();
 
 export function useTeamMembers() {
+  // ponytail: Firebase mirrors src/data/team.ts (single source of truth); no Sheet override — it raced the live snapshot and flashed stale rows.
   const [members, setMembers] = useState<TeamMemberDoc[]>(bundledTeam);
-  const [sheetMembers, setSheetMembers] = useState<TeamMemberDoc[]>([]);
   const [state, setState] = useState<LoadState>("loading");
 
   useEffect(() => {
@@ -147,23 +142,7 @@ export function useTeamMembers() {
     );
   }, []);
 
-  // Google Sheet roster (sheet order = display order) overrides everything.
-  useEffect(() => {
-    if (!isSheetsEnabled()) return;
-    let active = true;
-    fetchSheetTeam().then((list) => {
-      if (active && list.length > 0) setSheetMembers(list as TeamMemberDoc[]);
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  return {
-    members: sheetMembers.length > 0 ? sheetMembers : members,
-    state,
-    isLoading: state === "loading",
-  };
+  return { members, state, isLoading: state === "loading" };
 }
 
 /** Parses the loose date formats used across SPIC events. */

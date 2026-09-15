@@ -1,4 +1,4 @@
-import type { TeamMember } from "@/data/team";
+import { coreLeadership, departmentHeads, facultyAdvisor, teamMembers, type TeamMember } from "@/data/team";
 import { listDocs, setDocData, deleteDocData, subscribeDocs } from "./firestore";
 
 const TEAM_COLLECTION = "team";
@@ -10,13 +10,46 @@ export interface TeamMemberDoc extends TeamMember {
   updatedAt?: string;
 }
 
-function toMember(id: string, data: Record<string, unknown>): TeamMemberDoc {
-  return { ...(data as unknown as TeamMemberDoc), id: (data.id as string) || id };
+function toMember(id: string, data: Record<string, unknown>): TeamMemberDoc | null {
+  const name = String((data.name as string) ?? "").trim();
+  if (!name) return null; // one bad row must not blank/crash the whole page
+  return {
+    ...(data as unknown as TeamMemberDoc),
+    id: (data.id as string) || id,
+    name,
+    role: String((data.role as string) ?? "").trim() || "Member",
+  };
+}
+
+/** Full roster from the bundled file (the editable source of truth). */
+export function buildFileRoster(): TeamMemberDoc[] {
+  return [
+    { ...facultyAdvisor, category: "faculty" },
+    ...coreLeadership.map((m: TeamMember) => ({ ...m, category: "core" })),
+    ...departmentHeads.map((m: TeamMember) => ({ ...m, category: "department" })),
+    ...teamMembers.map((m: TeamMember) => ({ ...m, category: "member" })),
+  ].map((m, i) => ({ ...m, order: i }));
+}
+
+/** One-click push of the bundled file roster to Firebase (upsert by stable id). */
+export async function syncFileRosterToFirebase(): Promise<number> {
+  const roster = buildFileRoster();
+  const now = new Date().toISOString();
+  for (const member of roster) {
+    await setDocData(TEAM_COLLECTION, member.id, { ...member, updatedAt: now });
+  }
+  return roster.length;
+}
+
+function sortRoster(list: TeamMemberDoc[]): TeamMemberDoc[] {
+  return list.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }
 
 export async function getTeamMembers(): Promise<TeamMemberDoc[]> {
   const docs = await listDocs(TEAM_COLLECTION);
-  return docs.map((doc) => toMember(doc.id, doc.data)).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  return sortRoster(
+    docs.map((doc) => toMember(doc.id, doc.data)).filter((m): m is TeamMemberDoc => m !== null),
+  );
 }
 
 export function subscribeToTeam(
@@ -26,7 +59,11 @@ export function subscribeToTeam(
   return subscribeDocs(
     TEAM_COLLECTION,
     (docs) =>
-      onData(docs.map((doc) => toMember(doc.id, doc.data)).sort((a, b) => (a.order ?? 0) - (b.order ?? 0))),
+      onData(
+        sortRoster(
+          docs.map((doc) => toMember(doc.id, doc.data)).filter((m): m is TeamMemberDoc => m !== null),
+        ),
+      ),
     onError,
   );
 }

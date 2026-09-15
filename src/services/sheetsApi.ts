@@ -1,11 +1,8 @@
 /**
- * Google Sheets (Apps Script) live data for Team + Gallery.
+ * Google Sheets (Apps Script) live data for Gallery.
  *
- * The sheet is the source of truth: edit rows there and the website
- * updates automatically (no redeploy needed). Sheet row order = display order.
- *
- * Priority: Google Sheet -> Firebase -> bundled static data.
- * If the sheet can't be reached, callers silently fall back.
+ * Team roster lives in src/data/team.ts and mirrors to Firebase —
+ * the Sheet override raced the live snapshot and flashed stale rows.
  */
 
 const DEFAULT_SHEETS_API_URL =
@@ -16,15 +13,6 @@ const SHEETS_API_URL = (
 ).replace(/\/$/, "");
 
 export const isSheetsEnabled = () => SHEETS_API_URL.length > 0;
-
-interface SheetTeamRow {
-  sno: number | string;
-  name: string;
-  post: string;
-  department: string;
-  level: string;
-  image: string;
-}
 
 export interface SheetGalleryItem {
   sno: number | string;
@@ -49,30 +37,6 @@ async function fetchSheet<T>(sheet: "team" | "gallery"): Promise<T[]> {
   } finally {
     clearTimeout(timer);
   }
-}
-
-const levelToCategory = (level: string): string => {
-  const l = (level || "").toLowerCase();
-  if (l.includes("faculty")) return "faculty";
-  if (l.includes("core")) return "core";
-  if (l.includes("department") || l.includes("head")) return "department";
-  return "member";
-};
-
-/** Team rows in sheet order (top row = first on site). */
-export async function fetchSheetTeam() {
-  const rows = await fetchSheet<SheetTeamRow>("team");
-  return rows
-    .filter((r) => r && r.name && String(r.name).trim())
-    .map((r, i) => ({
-      id: `sheet-${r.sno ?? i}`,
-      name: String(r.name).trim(),
-      role: String(r.post || "Member").trim(),
-      department: String(r.department || "").trim() || undefined,
-      image: String(r.image || "").trim() || undefined,
-      category: levelToCategory(String(r.level || "")),
-      order: Number(r.sno) || i,
-    }));
 }
 
 /** Gallery images in sheet (serial number) order. */

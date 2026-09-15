@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Users } from "lucide-react";
 import SmartImage from "@/components/site/SmartImage";
-import Reveal, { StaggerItem, StaggerList } from "@/components/site/Reveal";
+import Reveal from "@/components/site/Reveal";
 import { GridField, MeshBackdrop } from "@/components/site/Atmosphere";
 import { Badge, buttonStyles, EmptyState, Input, SectionHeading, Skeleton } from "@/components/ui/kit";
 import type { TeamMemberDoc } from "@/services/firebaseTeam";
@@ -152,13 +152,11 @@ export default function Team() {
             <EmptyState icon={<Users className="h-7 w-7" />} title="No members match that search" />
           </div>
         ) : (
-          <StaggerList className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:gap-5">
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:gap-5">
             {filtered.map((member) => (
-              <StaggerItem key={member.id}>
-                <MemberCard member={member} />
-              </StaggerItem>
+              <MemberCard key={member.id} member={member} />
             ))}
-          </StaggerList>
+          </div>
         )}
       </section>
     </>
