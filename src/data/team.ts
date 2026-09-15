@@ -19,38 +19,26 @@ export const facultyAdvisor: TeamMember = {
 };
 
 export const coreLeadership: TeamMember[] = [
-  { id: "cl-1", name: "Amit Yadav ", role: "President", linkedinUrl: "#", image: "https://i.postimg.cc/R02WN11m/SAVE-20260119-155045-Amit-Yadav.jpg" },
-  { id: "cl-2", name: "Shriya Shreyaskar", role: "Vice President", linkedinUrl: "#", image: "https://i.postimg.cc/MGgnv00X/Grid-Art-20250818-223905918-Shriya-Shreyaskar.jpg" },
-  { id: "cl-3", name: "Mayank Tyagi", role: "Treasurer", linkedinUrl: "#", image: "https://i.postimg.cc/nz7C7sTM/Mayank-tyagi.jpg" },
-  { id: "cl-4", name: "Traymbakesh Mishra", role: "PRO", linkedinUrl: "#", image: "https://i.postimg.cc/63RyR7zY/Traymbakesh-Mishra.jpg" },
-  { id: "cl-5", name: "Aman Sharma", role: "PRO", linkedinUrl: "#", image: "https://i.postimg.cc/wMp3k6bQ/Aman.jpg" },
-  { id: "cl-6", name: "Aditya Bhaguna", role: "Assistant Vice President", linkedinUrl: "#", objectPosition: "center 20%", image: "https://i.postimg.cc/5yVjmxkK/Aditya.jpg" },
-  { id: "cl-7", name: "Ankita Pal", role: "Assistant Vice President", linkedinUrl: "#", image: "https://i.postimg.cc/cCS6cs5p/Whats-App-Image-2026-03-18-at-4-17-34-PM.jpg" },
-  { id: "cl-8", name: "Archana Chaurshiya", role: "Assistant Vice President", linkedinUrl: "#", image: "https://i.postimg.cc/x82qP04S/Archana.jpg" },
-  { id: "cl-9", name: "Prakhar Srivastava", role: "Executive", linkedinUrl: "#", image: "https://i.postimg.cc/KjDjqd62/PXL-20251231-192407161-Prakhar-Srivastava.jpg" },
-  { id: "cl-10", name: "Shikhar Sachan ", role: "Executive", linkedinUrl: "#", image: "https://i.postimg.cc/RhLhsjkS/Whats-App-Image-2026-03-25-at-8-06-57-PM.jpg" },
-  { id: "cl-11", name: "Shiva Adhikari ", role: "Executive", linkedinUrl: "#", image: "https://i.postimg.cc/NFkFJW3y/Whats-App-Image-2026-03-25-at-8-50-58-PM.jpg" },
-  { id: "cl-12", name: "Keshav Kumar", role: "General Secretary", linkedinUrl: "#", image: "https://i.postimg.cc/tJNJSLKW/Whats-App-Image-2026-04-14-at-11-18-39-PM.jpg", objectPosition: "center 20%" },
-  { id: "cl-13", name: "Krishnav Talukdar", role: "Deputy Secretary", linkedinUrl: "#", image: "https://i.postimg.cc/L4tJ81nb/DS.jpg" },
+  { id: "cl-1", name: "Keshav Thakur", role: "President", linkedinUrl: "#", image: "https://i.postimg.cc/tJNJSLKW/Whats-App-Image-2026-04-14-at-11-18-39-PM.jpg", objectPosition: "center 20%" },
+  { id: "cl-2", name: "Krishnav Talukdar", role: "Vice President", linkedinUrl: "#", image: "https://i.postimg.cc/L4tJ81nb/DS.jpg" },
+  { id: "cl-3", name: "Puneet Chaudhary", role: "Treasurer", linkedinUrl: "#", image: "https://i.postimg.cc/VsqJkCd3/IMG-2904-puneet-chaudhary.jpg" },
+  { id: "cl-4", name: "Meghna Kandpal", role: "Assistant Vice President", linkedinUrl: "#", image: "https://i.postimg.cc/Bn6bp7NV/IMG-1741869018013-Meghna-Kandpal.jpg" },
+  { id: "cl-5", name: "Parth Mehra", role: "Assistant Vice President", linkedinUrl: "#", image: "https://i.postimg.cc/bYxZwtZ8/IMG-20260207-WA0005-parth-Mehra.jpg" },
+  { id: "cl-6", name: "Shivam Vashishth", role: "Assistant Vice President", linkedinUrl: "#", image: "https://i.postimg.cc/3J9WgQjv/IMG-20251106-WA0031-Shivam-Vashisth.jpg", objectPosition: "center 20%" },
+  { id: "cl-7", name: "Prakhar Bajpai", role: "Assistant Vice President", linkedinUrl: "#", image: "https://i.postimg.cc/8z5c4Xtj/IMG-20251105-121044-(1)-PRAKHAR-BAJPAI.jpg" },
+  { id: "cl-8", name: "Vansh Baisla", role: "Advisor", linkedinUrl: "#", image: "https://i.postimg.cc/MTypHCK3/Vansh-baisla.jpg" },
+  { id: "cl-9", name: "Daksh Chaudhary", role: "Executive", linkedinUrl: "#", image: "https://i.postimg.cc/MKzvMpBM/Daksh-Chaudhary-Daksh-Choudhary.jpg" },
+  { id: "cl-10", name: "Saloni Choudhary", role: "Executive", linkedinUrl: "#", image: "https://i.postimg.cc/RZDFD1Ds/B77C1F81-89BF-4D53-9C76-4440F2DB60A7-Saloni-Singh.jpg", objectPosition: "center 20%" },
+  { id: "cl-11", name: "Utkarsh Tyagi", role: "Executive", linkedinUrl: "#", image: "https://i.postimg.cc/Y26vCWvj/IMG-20250226-234449-530-Utkarsh-Tyagi.jpg" },
+  { id: "cl-12", name: "Vaibhav Srivastava", role: "Executive", linkedinUrl: "#", image: "https://i.postimg.cc/520ygKnd/DSC-2054-Vaibhav-Srivastava.jpg", objectPosition: "center 20%" },
+  { id: "cl-13", name: "Ujjwal Goel", role: "Executive", linkedinUrl: "#", image: "https://i.postimg.cc/FHBRBbBj/Ujjwal-goel.jpg" },
+  { id: "cl-14", name: "Pranjal Dubey", role: "PRO", linkedinUrl: "#", image: "https://i.postimg.cc/c4drgL30/IMG-20250405-155938248-HDR-AE-Pranjal-Dubey.jpg" },
+  { id: "cl-15", name: "Prateek Dixit", role: "PRO", linkedinUrl: "#", image: "https://i.postimg.cc/kX7B6gS4/retouch-2025091801391880-Prateek-Dixit.jpg" },
 ];
 
 export const departmentHeads: TeamMember[] = [
-  { id: "dh-1", name: "Puneet Chaudhary", role: "Head", department: "FundIncharge", linkedinUrl: "#", image: "https://i.postimg.cc/VsqJkCd3/IMG-2904-puneet-chaudhary.jpg" },
-  { id: "dh-14", name: "Parth Mehra", role: "Head", department: "Management", linkedinUrl: "#", image: "https://i.postimg.cc/bYxZwtZ8/IMG-20260207-WA0005-parth-Mehra.jpg" },
-  { id: "dh-15", name: "Utkarsh Tyagi", role: "Co-Head", department: "Management", linkedinUrl: "#", image: "https://i.postimg.cc/Y26vCWvj/IMG-20250226-234449-530-Utkarsh-Tyagi.jpg" },
-
-  { id: "dh-2", name: "Pranjal Dubey", role: "Head", department: "PublicRelations", linkedinUrl: "#", image: "https://i.postimg.cc/c4drgL30/IMG-20250405-155938248-HDR-AE-Pranjal-Dubey.jpg" },
-  { id: "dh-3", name: "Prateek Dixit", role: "Co-Head", department: "PublicRelations", linkedinUrl: "#", image: "https://i.postimg.cc/kX7B6gS4/retouch-2025091801391880-Prateek-Dixit.jpg" },
-  { id: "dh-4", name: "Daksh Chaudhary", role: "Head", department: "Designing", linkedinUrl: "#", image: "https://i.postimg.cc/MKzvMpBM/Daksh-Chaudhary-Daksh-Choudhary.jpg" },
-  { id: "dh-5", name: "Shivam Vashisth", role: "Co-Head", department: "Designing", linkedinUrl: "#", image: "https://i.postimg.cc/3J9WgQjv/IMG-20251106-WA0031-Shivam-Vashisth.jpg", objectPosition: "center 20%" },
   { id: "dh-6", name: "Ashmit Kumar", role: "Head", department: "Technical", linkedinUrl: "#", image: "https://i.postimg.cc/7YXbgr1t/Ashmit-kumar.jpg" },
   { id: "dh-7", name: "Nikhil Gaurav", role: "Co-Head", department: "Technical", linkedinUrl: "#", image: "https://i.postimg.cc/28T34Nds/Whats-App-Image-2026-03-15-at-8-24-14-PM.jpg" },
-  { id: "dh-8", name: "Meghna Kandpal", role: "Head", department: "SocialMedia", linkedinUrl: "#", image: "https://i.postimg.cc/Bn6bp7NV/IMG-1741869018013-Meghna-Kandpal.jpg" },
-  { id: "dh-9", name: "Vaibhav Srivastava", role: "Co-Head", department: "SocialMedia", linkedinUrl: "#", image: "https://i.postimg.cc/520ygKnd/DSC-2054-Vaibhav-Srivastava.jpg", objectPosition: "center 20%" },
-
-  { id: "dh-10", name: "Prakhar Bajpai", role: "Head", department: "Documentation", linkedinUrl: "#", image: "https://i.postimg.cc/8z5c4Xtj/IMG-20251105-121044-(1)-PRAKHAR-BAJPAI.jpg" },
-  { id: "dh-11", name: "Ujjwal Goel", role: "Co-Head", department: "Documentation", linkedinUrl: "#", image: "https://i.postimg.cc/FHBRBbBj/Ujjwal-goel.jpg" },
-  { id: "dh-12", name: "Saloni Singh", role: "Head", department: "Club Out Reach", linkedinUrl: "#", image: "https://i.postimg.cc/RZDFD1Ds/B77C1F81-89BF-4D53-9C76-4440F2DB60A7-Saloni-Singh.jpg", objectPosition: "center 20%" },
   { id: "dh-13", name: "Nilisha Garg", role: "Co-Head", department: "Club Out Reach", linkedinUrl: "#", image: "https://i.postimg.cc/SKYsFXBg/IMG-20260209-200539-Nilisha-Garg.jpg" },
 
 ];
@@ -61,7 +49,6 @@ export const teamMembers: TeamMember[] = [
   { id: "tm-25", name: "Arpit Yadav", role: "Member", department: "Technical Team", image: "https://i.postimg.cc/wvKB6qHR/DSC-0270-DADDY-MUKAMBO.jpg" },
   { id: "tm-34", name: "Akshat Uniyal ", role: "Member", department: "Content & Social Media", image: "https://i.postimg.cc/qR8vqPMt/IMG-20251121-231126-040-DUKEDAD-yt.jpg" },
   { id: "tm-3", name: "Gagan Kesarwani", role: "Member", department: "Design & Creatives", image: "https://i.postimg.cc/4dzxyDNz/IMG-3968-Original-Gagan.jpg" },
-  { id: "tm-6", name: "Vansh Baisla", role: "Member", department: "Finance & Sponsorship", image: "https://i.postimg.cc/MTypHCK3/Vansh-baisla.jpg" },
 
   { id: "tm-4", name: "Vishal Singh", role: "Member", department: "Public Relations", image: "https://i.postimg.cc/Bb4QKmXp/IMG-8148-vishal-singh.jpg" },
   { id: "tm-5", name: "Vansh Tyagi", role: "Member", department: "Content & Social Media", image: "https://i.postimg.cc/L5261xn7/IMG-20251002-202703-557-Vansh-Tyagi.jpg" },
@@ -101,5 +88,6 @@ export const teamMembers: TeamMember[] = [
   { id: "tm-43", name: "Adiya", role: "Member", department: "Content & Social Media", image: "https://i.postimg.cc/nzYnpq3b/Whats-App-Image-2026-03-25-at-6-33-39-PM.jpg" },
   // { id: "tm-44", name: "Avika Singh", role: "Member", department: "Content & Social Media" },
   { id: "tm-45", name: "Apoorva Singhal ", role: "Member", department: "Content & Social Media", image: "https://i.postimg.cc/nr3ZQp8Y/IMG-20251014-211421-2-Apoorva-Singhal.jpg" },
+  { id: "tm-46", name: "Naman Walecha", role: "Member" },
 
 ];

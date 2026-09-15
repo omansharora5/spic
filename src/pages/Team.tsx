@@ -16,7 +16,7 @@ const LinkedInGlyph = ({ className }: { className?: string }) => (
 );
 
 function isFaculty(member: TeamMemberDoc) {
-  return member.category === "faculty" || /dean|faculty|advisor|professor/i.test(member.role ?? "");
+  return member.category === "faculty" || /dean|faculty|professor/i.test(member.role ?? "");
 }
 
 function MemberCard({ member, large = false }: { member: TeamMemberDoc; large?: boolean }) {
