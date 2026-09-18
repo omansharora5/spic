@@ -22,8 +22,68 @@ export interface Event {
   /* Up to 5 organiser-authored instructions shown to participants
      (e.g. "Bring your laptop & charger"). Set by admin in the event editor. */
   notes?: string[];
+  /* Registration closes automatically after this (datetime-local value). */
+  registrationDeadline?: string;
+  /* Event ends at endDate + endTime. Empty endDate = same day the event starts. */
+  endDate?: string;
+  endTime?: string;
   createdAt?: string;
   updatedAt?: string;
+}
+
+/* ── Live status: deadlines auto-close/​end events without a cron job ── */
+
+function toDate(value?: string): Date | null {
+  if (!value) return null;
+  let d = new Date(value);
+  if (isNaN(d.getTime())) d = new Date(value.replace(/-/g, "/"));
+  return isNaN(d.getTime()) ? null : d;
+}
+
+/** First calendar date found in the loose start-date formats ("25 & 27 April 2026" → 25th). */
+function startDay(ev: Event): Date | null {
+  const direct = toDate(ev.date);
+  if (direct) return direct;
+  const match = ev.date?.match(/(\d{1,2})\s*([A-Za-z]+)\s*(\d{4})/);
+  if (match) {
+    const d = new Date(`${match[2]} ${match[1]}, ${match[3]}`);
+    if (!isNaN(d.getTime())) return d;
+  }
+  return null;
+}
+
+export function resolveRegistrationDeadline(ev: Event): Date | null {
+  return toDate(ev.registrationDeadline);
+}
+
+/** End of event: endDate (or start day) at endTime (or 23:59). Null when undeterminable. */
+export function resolveEventEnd(ev: Event): Date | null {
+  const day = toDate(ev.endDate) ?? startDay(ev);
+  if (!day) return null;
+  // ponytail: end-of-day fallback, add a duration field if organisers ever need multi-day precision.
+  const end = new Date(day);
+  const time = ev.endTime?.match(/^(\d{1,2}):(\d{2})/);
+  end.setHours(time ? Number(time[1]) : 23, time ? Number(time[2]) : 59, 0, 0);
+  return end;
+}
+
+/** Stored status overridden by elapsed deadline/end — this is what the UI gates on. */
+export function getEffectiveStatus(ev: Event, now = Date.now()): Event["status"] {
+  if (ev.status === "ended") return "ended";
+  const end = resolveEventEnd(ev);
+  if (end && now >= end.getTime()) return "ended";
+  if (ev.status === "closed") return "closed";
+  const deadline = resolveRegistrationDeadline(ev);
+  if (deadline && now >= deadline.getTime()) return "closed";
+  return ev.status;
+}
+
+/** Same list with live statuses applied. */
+export function applyLiveStatus(events: Event[], now = Date.now()): Event[] {
+  return events.map((e) => {
+    const live = getEffectiveStatus(e, now);
+    return live === e.status ? e : { ...e, status: live };
+  });
 }
 
 export const MAX_EVENT_NOTES = 5;

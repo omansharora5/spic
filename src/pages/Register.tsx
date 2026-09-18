@@ -7,7 +7,7 @@ import EventNotes from "@/components/site/EventNotes";
 import Reveal from "@/components/site/Reveal";
 import { eventCover } from "@/components/site/EventCard";
 import { Alert, Badge, buttonStyles, statusTone } from "@/components/ui/kit";
-import { formatEventDate, useCountdown, useEvent } from "@/hooks/useSpicData";
+import { formatEventDate, formatEventDateTime, useCountdown, useEvent } from "@/hooks/useSpicData";
 
 export default function Register() {
   const { eventId } = useParams<{ eventId: string }>();
@@ -146,6 +146,7 @@ export default function Register() {
               <p className="mt-5 flex items-start gap-2 text-[12.5px] text-muted">
                 <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand" />
                 Keep your QR ticket handy — the SPIC scanner marks attendance at the venue entrance.
+                {event.registrationDeadline ? ` Registrations close ${formatEventDateTime(event.registrationDeadline)}.` : null}
               </p>
             ) : null}
           </div>

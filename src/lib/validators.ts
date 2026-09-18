@@ -65,6 +65,15 @@ export const BRANCH_OPTIONS = [
   "Others",
 ] as const;
 
+/** Class section A–Z. */
+export const SECTION_OPTIONS: string[] = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+
+export const section = z
+  .string()
+  .trim()
+  .toUpperCase()
+  .regex(/^[A-Z]$/, "Select your section (A–Z)");
+
 /** Shared member schema for team registrations. */
 export const teamMemberSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -72,6 +81,7 @@ export const teamMemberSchema = z.object({
   rollNumber,
   year: z.string().min(1, "Select your year"),
   branch: z.string().min(1, "Select your branch"),
+  section,
   phone,
 });
 

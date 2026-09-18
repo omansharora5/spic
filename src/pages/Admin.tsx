@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   CalendarDays,
   ChartColumn,
@@ -8,6 +9,7 @@ import {
   LogOut,
   Pencil,
   Plus,
+  QrCode,
   RefreshCw,
   Search,
   Ticket,
@@ -26,7 +28,7 @@ import { deleteTeamMember, subscribeToTeam, syncFileRosterToFirebase } from "@/s
 import PinGate, { clearStoredPin, readStoredPin } from "@/components/admin/PinGate";
 import EventNotes from "@/components/site/EventNotes";
 import { useEvents, useGallery, formatEventDate } from "@/hooks/useSpicData";
-import { Alert, Badge, Button, Field, Input, Select, Skeleton, Textarea, statusTone } from "@/components/ui/kit";
+import { Alert, Badge, Button, Field, Input, Select, Skeleton, Textarea, buttonStyles, statusTone } from "@/components/ui/kit";
 import { cn } from "@/utils/cn";
 
 /* ─────────────────────── Event editor drawer ─────────────────────── */
@@ -39,6 +41,9 @@ const EMPTY_EVENT: Partial<Event> = {
   status: "upcoming",
   category: "workshop",
   description: "",
+  registrationDeadline: "",
+  endDate: "",
+  endTime: "",
   registrationType: "individual",
   minTeamSize: 1,
   maxTeamSize: 4,
@@ -145,6 +150,15 @@ function EventEditor({
             </Field>
             <Field label="Venue" className="sm:col-span-2">
               <Input value={draft.venue ?? ""} onChange={(e) => update({ venue: e.target.value })} placeholder="Seminar Hall, D Block" />
+            </Field>
+            <Field label="Registration closes at" hint="After this, sign-ups stop">
+              <Input type="datetime-local" value={draft.registrationDeadline ?? ""} onChange={(e) => update({ registrationDeadline: e.target.value })} />
+            </Field>
+            <Field label="Event ends" hint="Blank date = same day it starts">
+              <div className="grid grid-cols-2 gap-2">
+                <Input type="date" value={draft.endDate ?? ""} onChange={(e) => update({ endDate: e.target.value })} aria-label="End date" />
+                <Input type="time" value={draft.endTime ?? ""} onChange={(e) => update({ endTime: e.target.value })} aria-label="End time" />
+              </div>
             </Field>
             <Field label="Status">
               <Select value={draft.status ?? "upcoming"} onChange={(e) => update({ status: e.target.value as Event["status"] })}>
@@ -294,6 +308,7 @@ type RegistrationRow = {
   rollNumber?: string;
   branch?: string;
   year?: string;
+  section?: string;
 };
 
 function StatTile({ icon: Icon, label, value, sub }: { icon: typeof Users; label: string; value: string | number; sub?: string }) {
@@ -375,6 +390,7 @@ export default function Admin() {
           row.teamName,
           row.eventName,
           row.rollNumber,
+          row.section ?? row.members?.map((m) => (m as { section?: string }).section).filter(Boolean).join("/") ?? "",
           ...(row.members?.map((m) => `${m.name} ${m.email}`) ?? []),
         ]
           .join(" ")
@@ -416,7 +432,7 @@ export default function Admin() {
   };
 
   const exportCsv = () => {
-    const header = ["Type", "Event", "Name / Team", "Email", "Roll", "Branch", "Year", "Checked in", "Created"];
+    const header = ["Type", "Event", "Name / Team", "Email", "Roll", "Branch", "Year", "Section", "Checked in", "Created"];
     const rows = filteredRegistrations.map((row) => [
       row.type,
       row.eventName ?? "",
@@ -425,6 +441,7 @@ export default function Admin() {
       row.rollNumber ?? "",
       row.branch ?? "",
       row.year ?? "",
+      row.section ?? row.members?.map((m) => (m as { section?: string }).section).filter(Boolean).join("/") ?? "",
       row.type === "team" ? `${row.members?.filter((m) => m.checkedIn).length ?? 0}/${row.members?.length ?? 0}` : row.checkedIn ? "yes" : "no",
       row.createdAt ?? "",
     ]);
@@ -484,6 +501,9 @@ export default function Admin() {
           </h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <Link to="/scan" className={buttonStyles("outline", "sm")}>
+            <QrCode className="h-3.5 w-3.5" /> Open scanner
+          </Link>
           <Button variant="outline" size="sm" onClick={() => setRefreshToken((token) => token + 1)}>
             <RefreshCw className="h-3.5 w-3.5" /> Refresh
           </Button>
@@ -708,7 +728,9 @@ export default function Admin() {
                           {row.type === "team" ? row.teamName : row.participantName}
                         </p>
                         <p className="text-[12px] text-muted">
-                          {row.type === "team" ? `${row.members?.length ?? 0} members` : (row.rollNumber ?? "—")}
+                          {row.type === "team"
+                            ? `${row.members?.length ?? 0} members`
+                            : ([row.rollNumber, row.section ? `Sec ${row.section}` : ""].filter(Boolean).join(" · ") || "—")}
                         </p>
                       </td>
                       <td className="px-4 py-3.5 text-muted">{row.eventName ?? "—"}</td>

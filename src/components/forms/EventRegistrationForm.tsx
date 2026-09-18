@@ -9,11 +9,13 @@ import { api, type Registration } from "@/services/api";
 import { createRegistrationDirect, saveFirebaseRegistration } from "@/services/firebaseRegistrations";
 import {
   BRANCH_OPTIONS,
+  SECTION_OPTIONS,
   YEAR_OPTIONS,
   collegeEmail,
   normalisePhone,
   phone as phoneRule,
   rollNumber,
+  section as sectionRule,
 } from "@/lib/validators";
 import { Alert, Button, Field, Input, Select, buttonStyles } from "@/components/ui/kit";
 
@@ -24,6 +26,7 @@ const schema = z.object({
   rollNumber,
   year: z.string().min(1, "Select your year"),
   branch: z.string().min(1, "Select your branch"),
+  section: sectionRule,
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -58,6 +61,7 @@ export default function EventRegistrationForm({
       rollNumber: values.rollNumber,
       year: values.year,
       branch: values.branch,
+      section: values.section,
     };
 
     try {
@@ -71,6 +75,7 @@ export default function EventRegistrationForm({
           rollNumber: values.rollNumber,
           year: values.year,
           branch: values.branch,
+          section: values.section,
         }).catch((fbErr: Error) => console.warn("[Registration] Firestore mirror note:", fbErr.message));
       } catch (apiError) {
         // Resilient path — write straight to Firestore and mint the QR locally.
@@ -193,6 +198,19 @@ export default function EventRegistrationForm({
             {BRANCH_OPTIONS.map((branch) => (
               <option key={branch} value={branch}>
                 {branch}
+              </option>
+            ))}
+          </Select>
+        </Field>
+
+        <Field label="Section" required error={errors.section?.message}>
+          <Select {...register("section")} defaultValue="" aria-invalid={!!errors.section}>
+            <option value="" disabled>
+              Select section
+            </option>
+            {SECTION_OPTIONS.map((sec) => (
+              <option key={sec} value={sec}>
+                {sec}
               </option>
             ))}
           </Select>

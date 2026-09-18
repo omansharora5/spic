@@ -9,6 +9,7 @@ import { api } from "@/services/api";
 import { createTeamRegistrationDirect, saveFirebaseTeamRegistration } from "@/services/firebaseRegistrations";
 import {
   BRANCH_OPTIONS,
+  SECTION_OPTIONS,
   YEAR_OPTIONS,
   normalisePhone,
   teamMemberSchema,
@@ -68,7 +69,7 @@ export default function TeamRegistrationForm({ event }: { event: Event }) {
   const [pptFile, setPptFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const emptyMember = { name: "", email: "", rollNumber: "", year: "", branch: "", phone: "" };
+  const emptyMember = { name: "", email: "", rollNumber: "", year: "", branch: "", section: "", phone: "" };
 
   const {
     register,
@@ -286,6 +287,18 @@ export default function TeamRegistrationForm({ event }: { event: Event }) {
                   {BRANCH_OPTIONS.map((branch) => (
                     <option key={branch} value={branch}>
                       {branch}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Field label="Section" required error={errors.members?.[index]?.section?.message}>
+                <Select {...register(`members.${index}.section` as const)} defaultValue="">
+                  <option value="" disabled>
+                    Select section
+                  </option>
+                  {SECTION_OPTIONS.map((sec) => (
+                    <option key={sec} value={sec}>
+                      {sec}
                     </option>
                   ))}
                 </Select>

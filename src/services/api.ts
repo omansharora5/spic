@@ -18,6 +18,7 @@ export interface RegistrationPayload {
   rollNumber: string;
   year: string;
   branch: string;
+  section: string;
 }
 
 export interface Registration {
@@ -58,6 +59,7 @@ export interface TeamMember {
   rollNumber: string;
   year: string;
   branch: string;
+  section: string;
   phone: string;
 }
 

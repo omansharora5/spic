@@ -12,6 +12,7 @@ export interface TeamMemberRegistration {
   rollNumber: string;
   year: string;
   branch: string;
+  section: string;
   phone: string;
   verificationToken: string;
   qrDataUrl: string;
@@ -90,6 +91,7 @@ export async function createRegistrationDirect(payload: {
   rollNumber: string;
   year: string;
   branch: string;
+  section: string;
 }): Promise<Registration> {
   const id = uid();
   const verificationToken = uid();
@@ -112,6 +114,7 @@ export async function createRegistrationDirect(payload: {
     rollNumber: payload.rollNumber,
     year: payload.year,
     branch: payload.branch,
+    section: payload.section,
     verificationToken,
     qrDataUrl,
     emailStatus: "pending" as const,
@@ -130,7 +133,7 @@ export async function createTeamRegistrationDirect(payload: {
   eventDate: string;
   eventVenue: string;
   teamName: string;
-  members: Array<{ name: string; email: string; rollNumber: string; year: string; branch: string; phone: string }>;
+  members: Array<{ name: string; email: string; rollNumber: string; year: string; branch: string; section: string; phone: string }>;
   pptLink: string;
 }): Promise<{ id: string; teamName: string; qrDataUrl: string; message: string }> {
   const id = uid();

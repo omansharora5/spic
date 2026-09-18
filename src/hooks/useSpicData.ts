@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Event } from "@/data/events";
+import { applyLiveStatus } from "@/data/events";
 import { subscribeToTeam, buildFileRoster, type TeamMemberDoc } from "@/services/firebaseTeam";
 import {
   fallbackEvents,
@@ -8,7 +9,6 @@ import {
   subscribeToFirebaseEvents,
 } from "@/services/firebaseEvents";
 import { subscribeToGallery, type GalleryAlbum } from "@/services/firebaseGallery";
-import { subscribeToTeam, type TeamMemberDoc } from "@/services/firebaseTeam";
 import {
   fetchSheetGallery,
   isSheetsEnabled,
@@ -19,14 +19,21 @@ export type LoadState = "loading" | "live" | "fallback";
 
 /** Live events from Firestore with the shipped dataset as graceful fallback. */
 export function useEvents() {
-  const [events, setEvents] = useState<Event[]>(() => sortEventsList(fallbackEvents));
+  const [events, setEvents] = useState<Event[]>(() => applyLiveStatus(sortEventsList(fallbackEvents)));
   const [state, setState] = useState<LoadState>("loading");
   const [error, setError] = useState<string | null>(null);
+  // Re-evaluate registration deadlines / end times while the page is open.
+  const [now, setNow] = useState(() => Date.now());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 30_000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     return subscribeToFirebaseEvents(
       (list) => {
-        if (list.length) setEvents(list);
+        if (list.length) setEvents(applyLiveStatus(list, Date.now()));
         setState("live");
         setError(null);
       },
@@ -38,7 +45,9 @@ export function useEvents() {
     );
   }, []);
 
-  return { events, state, error, isLoading: state === "loading" };
+  // ponytail: derived each render from the tick, no extra state copies to drift.
+  const live = useMemo(() => applyLiveStatus(events, now), [events, now]);
+  return { events: live, state, error, isLoading: state === "loading" };
 }
 
 export function useEvent(eventId?: string) {
@@ -162,6 +171,15 @@ export function formatEventDate(value?: string): string {
   const date = parseEventDate(value);
   if (!date) return value ?? "Date to be announced";
   return date.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+}
+
+/** Formats a datetime-local value ("2026-04-25T18:00") for display. */
+export function formatEventDateTime(value?: string): string {
+  if (!value) return "";
+  let date = new Date(value);
+  if (isNaN(date.getTime())) date = new Date(value.replace(/-/g, "/"));
+  if (isNaN(date.getTime())) return value;
+  return date.toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
 }
 
 export function useCountdown(target?: string) {
